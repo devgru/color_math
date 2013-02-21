@@ -29,13 +29,6 @@ inline HSV_t hsv(uint8_t h, uint8_t s, uint8_t v) {
 
 const RGB_t black = {0, 0, 0};
 
-/*
- r 111\00000/11
- g 0/11111\0000
- b 00000/11111\
- h 0           full_hue
-   RoYlGaCsBzMpR
-*/
 RGB_t hsv2rgb(HSV_t hsv) {
     if (hsv.v > max_value) {
         hsv.v = max_value * 2 - hsv.v;
@@ -43,11 +36,11 @@ RGB_t hsv2rgb(HSV_t hsv) {
 
     if (hsv.v == 0) return black;
     
-    uint8_t high = hsv.v * max_whiteness;//channel with max value    
-    if (hsv.s == 0) return rgb(high, high, high);
+    uint8_t high = hsv.v * max_whiteness; //channel with max value    
+    if (hsv.s == 0) return rgb(high, high, high); //grayscale
     
     uint8_t W = max_whiteness - hsv.s;
-    uint8_t low = hsv.v * W;//channel with min value
+    uint8_t low = hsv.v * W; //channel with min value
     uint8_t rising = low;
     uint8_t falling = high;
     
@@ -55,7 +48,7 @@ RGB_t hsv2rgb(HSV_t hsv) {
     if (h_after_sixth > 0) {//not at primary color? ok, h_after_sixth = 1..sixth_hue - 1
         uint8_t z = hsv.s * uint8_t(hsv.v * h_after_sixth) / sixth_hue;
         rising += z;
-        falling -= z + 1;//it's never 255, so ok
+        falling -= z + 1; //it's never 255, so ok
     }
     
     uint8_t H = hsv.h;
@@ -74,7 +67,6 @@ RGB_t hsv2rgb(uint8_t H, uint8_t S, uint8_t V) {
 }
 
 //////////////////
-
 
 inline void set_led(RGB_t* leds, uint8_t led, RGB_t color) {
     leds[led] = color;
